@@ -1,0 +1,9 @@
+A has played against  B at 1
+                      C at 3
+and wants to play     D at 2 or 4
+
+but D has already played activity 2 and 4
+
+This will always be the case.
+
+For every round team A plays, their remaining opponents plays an additional activity that A is not playing.
