@@ -3,6 +3,7 @@ import {
   activities,
   teams,
   type Activity,
+  type Game,
   type RoundWithLocations,
   type Team,
   type TeamActivityGraph,
@@ -69,13 +70,12 @@ function createSchedule(teams: Teams) {
 function printSchedule(schedule: RoundWithLocations[]) {
   for (const [i, round] of schedule.entries()) {
     console.log("Round", i + 1);
-    for (const game of round) {
-      console.log(
-        `  ${game.location.padEnd(10)} | ${game.home.padEnd(
-          2
-        )} vs ${game.away.padEnd(2)}`
-      );
-    }
+    console.table(
+      round.reduce<Partial<Record<Activity, Game>>>((acc, game) => {
+        acc[game.location] = { home: game.home, away: game.away };
+        return acc;
+      }, {})
+    );
   }
 }
 
