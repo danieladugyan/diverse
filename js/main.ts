@@ -10,8 +10,6 @@ import {
   type Teams,
 } from "./types.js";
 
-import { permute } from "./permute.js";
-
 /**
  * Picks an activity for a game between two teams.
  * Choose the activity that has been played the least amount of times by the two teams.
@@ -75,31 +73,6 @@ function createSchedule(teams: Teams) {
   return { schedule, activityGraph };
 }
 
-function createSimpleSchedule(teams: Teams, seed: number[]) {
-  const schedule: RoundWithLocations[] = [];
-  const activityGraph = setupActivityGraph(teams);
-
-  // TODO: Implement schedule
-
-  return { schedule, activityGraph };
-}
-
-function createSchedulePermutations(teams: Teams) {
-  const activityPermutations = permute(activities);
-  const schedules: {schedule: RoundWithLocations[], activityGraph: TeamActivityGraph}[] = [];
-  const seed: number[] = new Array(teams.length - 1).fill(0);
-  for (let i = 0; i < activityPermutations.length; i++) {
-    schedules.push(createSimpleSchedule(teams, seed));
-    seed[0]!++;
-    for (let i = 0; i < seed.length; i++) {
-      if (seed[i] === teams.length) {
-        seed[i] = 0;
-        seed[i + 1]!++;
-      }
-    }
-  }
-}
-
 function printStats(activityGraph: TeamActivityGraph) {
   const stats = Object.entries(activityGraph).reduce<
     Record<number, { actual: number; ideal: number }>
@@ -138,15 +111,15 @@ function printSchedule(schedule: RoundWithLocations[]) {
   }
 }
 
-// const { schedule, activityGraph } = createSchedule(teams);
-// console.log("\nACTIVITY TABLE");
-// console.table(activityGraph);
-// console.log();
+const { schedule, activityGraph } = createSchedule(teams);
+console.log("\nACTIVITY TABLE");
+console.table(activityGraph);
+console.log();
 
-// console.log("ACTIVITY TABLE STATS");
-// printStats(activityGraph);
-// console.log();
+console.log("ACTIVITY TABLE STATS");
+printStats(activityGraph);
+console.log();
 
-// console.log("SCHEDULE");
-// printSchedule(schedule);
-// console.log();
+console.log("SCHEDULE");
+printSchedule(schedule);
+console.log();
