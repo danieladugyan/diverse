@@ -1,12 +1,12 @@
-import type { Round } from "./types.js";
+import type { Round, Team } from "./types.js";
 
-export function roundRobin(teams: Iterable<string>): Round[] {
+export function roundRobin(teams: Iterable<Team>): Round[] {
   const games: Round[] = [];
   const teamsArray = [...teams];
   const n = teamsArray.length;
 
   if (n % 2 === 1) {
-    teamsArray.push("Bye");
+    teamsArray.push("Bye" as Team);
   }
 
   for (let i = 0; i < n - 1; i++) {
