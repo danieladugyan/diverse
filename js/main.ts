@@ -10,6 +10,14 @@ import {
   type Teams,
 } from "./types.js";
 
+function getSortRoundByMatCountFn(activityGraph: TeamActivityGraph) {
+  return (a: Game, b: Game) => {
+    const count1 = activityGraph[a.home]["Mat"] + activityGraph[a.away]["Mat"];
+    const count2 = activityGraph[b.home]["Mat"] + activityGraph[b.away]["Mat"];
+    return count1 - count2;
+  };
+}
+
 /**
  * Picks an activity for a game between two teams.
  * Choose the activity that has been played the least amount of times by the two teams.
@@ -23,8 +31,15 @@ function pickActivity(
   let min = Number.MAX_SAFE_INTEGER;
   let activity: Activity | undefined = undefined;
   for (const a of available) {
-    const count = activityGraph[team1][a] + activityGraph[team2][a];
+    const count1 = activityGraph[team1][a];
+    const count2 = activityGraph[team2][a];
+    const count = count1 + count2;
     if (count < min) {
+      // No team should eat more than once
+      if (a === "Mat" && (count1 == 1 || count2 == 1)) {
+        continue;
+      }
+
       min = count;
       activity = a;
     }
@@ -50,7 +65,8 @@ function createSchedule(teams: Teams) {
   for (const round of rounds) {
     const available = new Set(activities);
     const roundWithLocations: RoundWithLocations = [];
-    for (const game of round) {
+    const sortFn = getSortRoundByMatCountFn(activityGraph);
+    for (const game of round.toSorted(sortFn)) {
       const activity = pickActivity(
         game.home,
         game.away,
