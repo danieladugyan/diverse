@@ -1,12 +1,12 @@
 import { roundRobin } from "./round-robin.js";
 import {
+  type Activity,
+  type Game,
   type GameWithRound,
   type Graph,
-  type RoundWithLocations,
   type Team,
   type Teams,
 } from "./types.js";
-import { setupActivityGraph } from "./utils.js";
 
 function createGraph(teams: Teams) {
   const rounds = roundRobin(teams).map((round, i) =>
@@ -14,21 +14,21 @@ function createGraph(teams: Teams) {
   );
   /**
    * Every game is a node in the graph.
-   * The edges are the games that share a team.
+   * The original edges are the games that share a team.
    */
   const graph = new Map<GameWithRound, Set<GameWithRound>>();
 
   const independentSets = rounds;
-  const cliques = new Map<Team, GameWithRound[]>();
+  const cliques = teams.reduce<Map<Team, Set<GameWithRound>>>(
+    (acc, team) => acc.set(team, new Set()),
+    new Map()
+  );
 
-  // Create cliques: map of teams to games
+  // Set up cliques: map of teams to games
   for (const round of rounds) {
     for (const game of round) {
       for (const team of [game.home, game.away]) {
-        if (!cliques.has(team)) {
-          cliques.set(team, []);
-        }
-        cliques.get(team)!.push(game);
+        cliques.get(team)!.add(game);
       }
     }
   }
@@ -36,19 +36,15 @@ function createGraph(teams: Teams) {
   // Create an adjacency graph
   for (const round of rounds) {
     for (const game of round) {
-      graph.set(
-        game,
-        new Set(
-          cliques
-            .get(game.home)!
-            .concat(cliques.get(game.away)!)
-            .filter((g) => g !== game)
-        )
-      );
+      // Get all games that share a team with the current game
+      const neighbors = cliques.get(game.home)!.union(cliques.get(game.away)!);
+      neighbors.delete(game);
+      graph.set(game, neighbors);
     }
   }
 
   // Model constraints: allow teams to play the same activity twice.
+  // TODO: is there a better way to drop edges?
   const cutOff = Math.floor(rounds.length / 2);
   for (const clique of cliques.values()) {
     // a clique is a list of connected games
@@ -57,18 +53,22 @@ function createGraph(teams: Teams) {
       const neighbors = graph.get(game)!;
       for (
         let i = isFirstHalf ? cutOff : 0;
-        isFirstHalf ? i < clique.length : i < cutOff;
+        isFirstHalf ? i < clique.size : i < cutOff;
         i++
       ) {
-        const neighbor = clique[i]!;
+        const neighbor = [...clique][i]!;
         // bi-directional delete
         neighbors.delete(neighbor);
         graph.get(neighbor)!.delete(game);
+        // TODO: investigate how cliques can stay in sync with graph
+        // cliques.get(neighbor.home)!.delete(neighbor);
+        // cliques.get(neighbor.away)!.delete(neighbor);
       }
     }
   }
 
   // Model constraints: connect independent sets
+  // No teams play the same activity in the same round
   for (const independentSet of independentSets) {
     for (const node of independentSet) {
       const neighbors = graph.get(node)!;
@@ -92,13 +92,10 @@ function printGraphStats(graph: Graph) {
 }
 
 export function createSchedule(teams: Teams) {
-  const schedule: RoundWithLocations[] = [];
-  const activityGraph = setupActivityGraph(teams);
-
   const graph = createGraph(teams);
+  const coloring = new Map<Game, Activity>();
+
   printGraphStats(graph);
 
   // Todo: greedy coloring algorithm
-
-  return { schedule, activityGraph };
 }
