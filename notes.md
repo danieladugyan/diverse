@@ -3,14 +3,16 @@
 - Maximum k-Differential Coloring Problem: how to make sure that no team has to move far between games.
   [kdiff.pdf](https://www2.cs.arizona.edu/~kobourov/kdiff.pdf)
 
-## Unsatisfiable constraints
+## Unsatisfiable constraints?
 
 Recall that in our line graph, every node is a game. By modelling the constraints outlined below we can reason about the minimum node degree, and thus the minimum number of colors needed for a proper vertex coloring. For simplicity, we'll assume n=12 below.
 
 1. Every match must have an edge to every other match in the same round. This represents the constraint that no games in one round can be playing the same activity. This adds 5 neighbours.
-2. Every match must also have an edge to every other match, in the same half of rounds, that also features one of the teams in the match. For each round, two matches will be played that feature one of the teams. We'll round down and say that half of the rounds is 5 rounds. This therefore adds 10 rounds.
+2. Every match must also have an edge to every other match, in the same half of rounds, that also features one of the teams in the match. For each round, two matches will be played that feature one of the teams. We'll round down and say that half of the rounds is 5 rounds. This therefore adds 10 neighbours.
 
 In summary, every match will be adjacent to 15 other matches. Therefore, it is not possible to schedule the tournament with only 6 activities.
+
+EDIT: In edge coloring this would have been true, but this is of course not true for vertex coloring. The search continues!
 
 ## Mapping edges to vertices
 
