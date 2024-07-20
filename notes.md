@@ -98,3 +98,9 @@ In round 3, A wants to play D at 2 or 4. However, D has already played activitie
 This will always be the case (?).
 
 For every round team A plays, their remaining opponents plays an additional activity that A is not playing (?).
+
+### Intro
+
+The problem of scheduling a round-robin tournament with $n$ players can be though of as building a fully connected (complete) graph. Every edge represents a pairing of teams and thus a match. We will represent the colour of each edge as the field it's being played at.
+
+A complete graph $K_n$ is edge-colorable with $n-1$ colors. This is obvious when we consider the colors to represent time-slots instead, since we know that it's possible to schedule a round-robin tournament for $n$ players with $n-1$ time-slots ($n-1$ rounds).
