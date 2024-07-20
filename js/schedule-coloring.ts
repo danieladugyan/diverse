@@ -1,7 +1,12 @@
 import { roundRobin } from "./round-robin.js";
-import { teams, type Game, type Team, type Teams } from "./types.js";
-
-type GameWithRound = Game & { round: number };
+import {
+  type GameWithRound,
+  type Graph,
+  type RoundWithLocations,
+  type Team,
+  type Teams,
+} from "./types.js";
+import { setupActivityGraph } from "./utils.js";
 
 function createGraph(teams: Teams) {
   const rounds = roundRobin(teams).map((round, i) =>
@@ -76,13 +81,24 @@ function createGraph(teams: Teams) {
   return graph;
 }
 
-const graph = createGraph(teams);
-console.log(graph);
+function printGraphStats(graph: Graph) {
+  const graphStats = {
+    nodes: graph.size,
+    edges: [...graph.values()].reduce((acc, edges) => acc + edges.size, 0),
+    minDegree: Math.min(...[...graph.values()].map((edges) => edges.size)),
+    maxDegree: Math.max(...[...graph.values()].map((edges) => edges.size)),
+  };
+  console.table(graphStats);
+}
 
-const graphStats = {
-  nodes: graph.size,
-  edges: [...graph.values()].reduce((acc, edges) => acc + edges.size, 0),
-  minDegree: Math.min(...[...graph.values()].map((edges) => edges.size)),
-  maxDegree: Math.max(...[...graph.values()].map((edges) => edges.size)),
-};
-console.table(graphStats);
+export function createSchedule(teams: Teams) {
+  const schedule: RoundWithLocations[] = [];
+  const activityGraph = setupActivityGraph(teams);
+
+  const graph = createGraph(teams);
+  printGraphStats(graph);
+
+  // Todo: greedy coloring algorithm
+
+  return { schedule, activityGraph };
+}

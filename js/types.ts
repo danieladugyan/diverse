@@ -43,3 +43,6 @@ export type TeamActivityGraph = {
     [key in Activity]: number;
   };
 };
+
+export type GameWithRound = Game & { round: number };
+export type Graph = Map<GameWithRound, Set<GameWithRound>>;
