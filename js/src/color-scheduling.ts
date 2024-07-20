@@ -1,5 +1,6 @@
 import { roundRobin } from "./round-robin.js";
 import {
+  activities,
   type Activity,
   type Game,
   type GameWithRound,
@@ -7,6 +8,7 @@ import {
   type Team,
   type Teams,
 } from "./types.js";
+import { shuffle } from "./utils.js";
 
 function createGraph(teams: Teams) {
   const rounds = roundRobin(teams).map((round, i) =>
@@ -93,9 +95,33 @@ function printGraphStats(graph: Graph) {
 
 export function createSchedule(teams: Teams) {
   const graph = createGraph(teams);
-  const coloring = new Map<Game, Activity>();
+  let bestScore = Infinity;
+  let bestColoring = new Map<Game, Activity>();
+  const nodes = [...graph.keys()];
 
   printGraphStats(graph);
 
-  // Todo: greedy coloring algorithm
+  const ITERATIONS = 1000000;
+  for (let i = 0; i < ITERATIONS; i++) {
+    const coloring = new Map<Game, Activity>();
+    let unschedulable = 0;
+    for (const node of nodes) {
+      const neighbors = graph.get(node)!;
+      const usedColors = new Set([...neighbors].map((n) => coloring.get(n)));
+      const availableColors = new Set(activities).difference(usedColors);
+      const color = availableColors.values().next().value;
+      if (!color) {
+        unschedulable++;
+      }
+      coloring.set(node, color);
+    }
+    if (unschedulable < bestScore) {
+      bestScore = unschedulable;
+      bestColoring = coloring;
+      console.log(`Iteration ${i}: ${unschedulable} unschedulable games`);
+    }
+    shuffle(nodes);
+  }
+
+  return bestColoring;
 }

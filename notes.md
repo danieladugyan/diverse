@@ -3,6 +3,18 @@
 - Maximum k-Differential Coloring Problem: how to make sure that no team has to move far between games.
   [kdiff.pdf](https://www2.cs.arizona.edu/~kobourov/kdiff.pdf)
 
+## Randomized greedy algorithm
+
+[https://arxiv.org/pdf/1505.05825](https://arxiv.org/pdf/1505.05825)
+
+| Iteration | Unschedulable games |
+| --------- | ------------------- |
+| 0         | 11                  |
+| 66        | 10                  |
+| 1181      | 8                   |
+| 49042     | 7                   |
+| >1000000  | <7???               |
+
 ## Cliques
 
 [Large cliques can improve the feasibility of exhaustive search](https://arxiv.org/pdf/1505.05825).
