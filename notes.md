@@ -3,6 +3,11 @@
 - Maximum k-Differential Coloring Problem: how to make sure that no team has to move far between games.
   [kdiff.pdf](https://www2.cs.arizona.edu/~kobourov/kdiff.pdf)
 
+## Cliques
+
+[Large cliques can improve the feasibility of exhaustive search](https://arxiv.org/pdf/1505.05825).
+After encoding the constraints in our graph, it will have overlapping cliques. Since every game in a round is now connected, every one of the $n-1$ rounds will form a clique. Furthermore, the original cliques corresponding to the games for every team will be split up into two, one for each half of rounds, forming $2n$ cliques. In total, there will be $3n-1$ cliques with a maximum size of $\frac{n}{2}$. Since all cliques are similar in size, and by definition they are significantly smaller than the number of vertices, this is not immediately helpful for coloring the graph.
+
 ## Unsatisfiable constraints?
 
 Recall that in our line graph, every node is a game. By modelling the constraints outlined below we can reason about the minimum node degree, and thus the minimum number of colors needed for a proper vertex coloring. For simplicity, we'll assume $n=12$ below.
