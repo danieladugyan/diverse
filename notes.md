@@ -51,7 +51,7 @@ Additionally, for every original clique, delete half of the edges. This reflects
 
 ## Activity permutations
 
-The simplest way to approach the problem is to assign each of the $(n-1)*(\frac{n}{2})$ games a choice of activity. There are 6 activities to choose from, 66 independent choices, yielding $6^{66} = 2.3*10^{51}$ choices...
+The simplest way to approach the problem is to assign each of the $(n-1) * (\frac{n}{2})$ games a choice of activity. There are 6 activities to choose from, 66 independent choices, yielding $6^{66} = 2.3*10^{51}$ choices...
 
 But the choices of activities are in fact not independent. We can't pick the same activity for every game in a round. So instead, consider one permutation as an ordered assignment of 6 activities to 6 matches. There are $6! = 720$ ways of assigning 6 activities to 6 matches.
 So, the first round can be construed in 720 ways, as can the second, and the third, and so on up until 11 rounds have been completed. This is a search space of $720^{11} = 2.7*10^{31}$....still not great.
@@ -79,7 +79,7 @@ A round will select a permutation of activities.
 
 ## Round-robin permutations
 
-(12 choose 2) + (10 choose 2) + (8 choose 2) + (6 choose 2) + (4 choose 2) + (2 choose 2) = 161 ways to pick teams for the first round
+$\binom{12}{2} + \binom{10}{2} + \binom{8}{2} + \binom{6}{2} + \binom{4}{2} + \binom{2}{2} = 161$ ways to pick teams for the first round
 
 [Edge coloring and round-robin](<https://math.libretexts.org/Bookshelves/Combinatorics_and_Discrete_Mathematics/Combinatorics_(Morris)/03%3A_Graph_Theory/14%3A_Graph_Coloring/14.01%3A_Edge_Coloring>)
 
@@ -87,7 +87,7 @@ A round will select a permutation of activities.
 
 ### Example
 
-Assume teams A-D and activities 1-4.
+Assume teams A-D and activities 1-4. LocHome represents the locations that the home team has not yet visited, and vice versa for the away team.
 
 Round 1
 
