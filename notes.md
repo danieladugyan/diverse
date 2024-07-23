@@ -3,6 +3,9 @@
 - Maximum k-Differential Coloring Problem: how to make sure that no team has to move far between games.
   [kdiff.pdf](https://www2.cs.arizona.edu/~kobourov/kdiff.pdf)
 
+## Constraint-programming
+As it turns out, constraint programming exists to solve problems just like these. I used [MiniZinc](https://docs.minizinc.dev/), a *constraint modelling language* used at LTH to quickly turn my graph into a constraint problem. Inputting $k=6$, corresponding to my 6 activities, told in me in no more than 1s 253 msec that these constraints are unsatisifiable. It could not quickly determine if a solution existed for $k=7$, but that wouldn't be helpful anyways.
+
 ## Randomized greedy algorithm
 
 [https://arxiv.org/pdf/1505.05825](https://arxiv.org/pdf/1505.05825)

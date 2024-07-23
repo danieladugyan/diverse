@@ -10,7 +10,7 @@ import {
 } from "./types.js";
 import { shuffle } from "./utils.js";
 
-function createGraph(teams: Teams) {
+export function createGraph(teams: Teams) {
   const rounds = roundRobin(teams).map((round, i) =>
     round.map((game) => ({ ...game, round: i }))
   );
